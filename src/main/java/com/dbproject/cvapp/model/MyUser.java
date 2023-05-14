@@ -3,6 +3,7 @@ package com.dbproject.cvapp.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -26,8 +27,16 @@ public class MyUser {
     @NotBlank
     @Size(max = 50)
     private String email;
+    @OneToOne
+    private UserDetails userDetails;
+    @NotBlank
+    @Size(max = 20)
     private String firstName;
+    @NotBlank
+    @Size(max = 50)
     private String lastName;
+    @NotBlank
+    @Size(max = 50)
     private String phone;
     private Boolean enabled;
     private Boolean accountNonExpired;
@@ -40,7 +49,7 @@ public class MyUser {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Roles> roles = new HashSet<>();
 
-    public MyUser(String username,String firstName, String lastName, String phone, String email, String password) {
+    public MyUser(String username, String firstName, String lastName, String phone, String email, String password) {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -48,5 +57,4 @@ public class MyUser {
         this.email = email;
         this.password = password;
     }
-
 }

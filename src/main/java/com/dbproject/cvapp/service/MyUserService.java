@@ -1,5 +1,6 @@
 package com.dbproject.cvapp.service;
 
+import com.dbproject.cvapp.dto.UserDTO;
 import com.dbproject.cvapp.exception.AdminDeleteException;
 import com.dbproject.cvapp.exception.NoAuthorizationException;
 import com.dbproject.cvapp.exception.NoUserException;
@@ -18,7 +19,7 @@ public class MyUserService {
 
     private final UserRepository userRepository;
 
-    public List<MyUser> getAllUsers(){
+    public List<MyUser> getAllUsers() {
         return userRepository.findAll();
     }
 
@@ -26,25 +27,25 @@ public class MyUserService {
         Optional<MyUser> optionalUser = userRepository.findUserByUsername(username);
         Optional<MyUser> optionalUserPotentialAdmin = userRepository.findById(requesterId);
 
-        if(optionalUser.isEmpty() || optionalUserPotentialAdmin.isEmpty())
+        if (optionalUser.isEmpty() || optionalUserPotentialAdmin.isEmpty())
             throw new NoUserException(username);
 
         List<Roles> potentialAdminUserRoles = optionalUserPotentialAdmin.get().getRoles().stream().toList();
         Roles roleAdminPotential = new Roles();
 
-        if(potentialAdminUserRoles.stream().findFirst().isPresent())
+        if (potentialAdminUserRoles.stream().findFirst().isPresent())
             roleAdminPotential = potentialAdminUserRoles.stream().findFirst().get();
 
-        if(!roleAdminPotential.getName().toString().equals("ROLE_ADMIN"))
+        if (!roleAdminPotential.getName().toString().equals("ROLE_ADMIN"))
             throw new NoAuthorizationException();
 
         List<Roles> userRoles = optionalUser.get().getRoles().stream().toList();
         Roles role = new Roles();
 
-        if(userRoles.stream().findFirst().isPresent())
+        if (userRoles.stream().findFirst().isPresent())
             role = userRoles.stream().findFirst().get();
 
-        if(role.getName().toString().equals("ROLE_ADMIN"))
+        if (role.getName().toString().equals("ROLE_ADMIN"))
             throw new AdminDeleteException();
 
 
@@ -53,23 +54,28 @@ public class MyUserService {
 
     }
 
-    public MyUser modifyUser(MyUser user){
+    public MyUser modifyUser(MyUser user) {
         return userRepository.save(user);
     }
 
     public MyUser getUserById(Integer userId) throws NoUserException {
         Optional<MyUser> optionalMyUser = userRepository.findById(userId);
-        if(optionalMyUser.isEmpty())
+        if (optionalMyUser.isEmpty())
             throw new NoUserException(userId);
         return optionalMyUser.get();
     }
 
+    public UserDTO getUserByIdDto(Integer userId) throws NoUserException {
+        Optional<MyUser> optionalMyUser = userRepository.findById(userId);
+        if (optionalMyUser.isEmpty())
+            throw new NoUserException(userId);
+        return new UserDTO(optionalMyUser.get());
+    }
+
     public MyUser getUserByUsername(String username) throws NoUserException {
         Optional<MyUser> optionalMyUser = userRepository.findUserByUsername(username);
-        if(optionalMyUser.isEmpty())
+        if (optionalMyUser.isEmpty())
             throw new NoUserException(username);
         return optionalMyUser.get();
     }
-
-
 }

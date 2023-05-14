@@ -1,7 +1,9 @@
 package com.dbproject.cvapp.controller;
 
+import com.dbproject.cvapp.exception.NoUserException;
 import com.dbproject.cvapp.model.MyUser;
 import com.dbproject.cvapp.model.Roles;
+import com.dbproject.cvapp.model.UserDetails;
 import com.dbproject.cvapp.model.UserRoles;
 import com.dbproject.cvapp.payload.request.LoginRequest;
 import com.dbproject.cvapp.payload.request.SignupRequest;
@@ -11,9 +13,9 @@ import com.dbproject.cvapp.repository.RolesRepository;
 import com.dbproject.cvapp.repository.UserRepository;
 import com.dbproject.cvapp.security.jwt.JwtUtils;
 import com.dbproject.cvapp.service.UserDetailsImpl;
+import com.dbproject.cvapp.service.UserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -27,6 +29,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequiredArgsConstructor
@@ -37,7 +40,8 @@ public class UserController {
     private final AuthenticationManager authenticationManager;
 
     private final RolesRepository roleRepository;
-private final PasswordEncoder encoder;
+    private final UserDetailsService userDetailsService;
+    private final PasswordEncoder encoder;
 
     @PostMapping(value = "/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -59,9 +63,10 @@ private final PasswordEncoder encoder;
                 roles));
 
     }
+
     //@PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+    public ResponseEntity<?> registerUser(@RequestBody SignupRequest signUpRequest) throws NoUserException {
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
             return ResponseEntity
                     .badRequest()
@@ -113,8 +118,11 @@ private final PasswordEncoder encoder;
         }
 
         user.setRoles(roles);
+        user = userRepository.save(user);
+        signUpRequest.getUserDetailsDTO().setUserId(user.getUserID());
+        UserDetails userDetails = userDetailsService.saveUserDetails(signUpRequest.getUserDetailsDTO());
+        user.setUserDetails(userDetails);
         userRepository.save(user);
-
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
 

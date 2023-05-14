@@ -1,8 +1,11 @@
 package com.dbproject.cvapp.payload.request;
 
+import com.dbproject.cvapp.dto.UserDetailsDTO;
 import lombok.Data;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 @Data
 public class SignupRequest {
@@ -30,6 +33,7 @@ public class SignupRequest {
     @NotBlank
     @Size(min = 6, max = 40)
     private String password;
-
+    @NotBlank
+    private UserDetailsDTO userDetailsDTO;
 
 }

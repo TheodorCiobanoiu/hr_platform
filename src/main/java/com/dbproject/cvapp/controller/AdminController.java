@@ -1,6 +1,7 @@
 package com.dbproject.cvapp.controller;
 
 
+import com.dbproject.cvapp.dto.UserDTO;
 import com.dbproject.cvapp.exception.AdminDeleteException;
 import com.dbproject.cvapp.exception.NoAuthorizationException;
 import com.dbproject.cvapp.exception.NoUserException;
@@ -40,8 +41,8 @@ public class AdminController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("get-user/by-id/{userId}")
-    public MyUser getUserById(@PathVariable Integer userId) throws NoUserException {
-        return myUserService.getUserById(userId);
+    public UserDTO getUserByIdDto(@PathVariable Integer userId) throws NoUserException {
+        return myUserService.getUserByIdDto(userId);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
