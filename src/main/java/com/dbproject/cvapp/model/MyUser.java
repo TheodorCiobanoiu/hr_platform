@@ -1,5 +1,6 @@
 package com.dbproject.cvapp.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,6 +29,7 @@ public class MyUser {
     @Size(max = 50)
     private String email;
     @OneToOne
+    @JsonBackReference
     private UserDetails userDetails;
     @NotBlank
     @Size(max = 20)
