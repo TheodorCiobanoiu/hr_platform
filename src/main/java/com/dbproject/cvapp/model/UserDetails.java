@@ -19,6 +19,5 @@ public class UserDetails {
     @JsonManagedReference
     private MyUser myUser;
     private JobType jobType;
-
-
+    private Integer noOfVacationDays;
 }

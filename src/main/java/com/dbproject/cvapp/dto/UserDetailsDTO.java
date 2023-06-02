@@ -12,9 +12,11 @@ import org.springframework.security.core.Transient;
 public class UserDetailsDTO {
     private Integer userId;
     private JobType jobType;
+    private Integer noOfVacationDays;
 
     UserDetailsDTO(UserDetails userDetails) {
         this.userId = userDetails.getMyUser().getUserID();
         this.jobType = userDetails.getJobType();
+        this.noOfVacationDays = userDetails.getNoOfVacationDays();
     }
 }

@@ -78,7 +78,7 @@ public class FileController {
                 .body(new ByteArrayResource(dbFile.getData()));
     }
 
-    @GetMapping("/generate-file")
+    @PostMapping("/generate-file")
     public void generatePDF(HttpServletResponse response, @RequestBody GenerateDocumentRequest generateDocumentRequest) throws IOException, NoUserException {
         response.setContentType("application/pdf");
         DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -87,7 +87,7 @@ public class FileController {
         String headerKey = "Content-Disposition";
         String headerValue = "attachment; filename=pdf_" + currentDateTime + ".pdf";
         response.setHeader(headerKey, headerValue);
-
+        System.out.println("New file generating...");
         this.pdfGeneratorService.export(response, generateDocumentRequest);
     }
 }

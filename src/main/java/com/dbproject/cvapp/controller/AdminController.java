@@ -39,7 +39,6 @@ public class AdminController {
         return myUserService.modifyUser(newUser);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("get-user/by-id/{userId}")
     public UserDTO getUserByIdDto(@PathVariable Integer userId) throws NoUserException {
         return myUserService.getUserByIdDto(userId);
