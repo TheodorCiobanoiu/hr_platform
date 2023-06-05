@@ -6,8 +6,10 @@ import com.dbproject.cvapp.exception.AdminDeleteException;
 import com.dbproject.cvapp.exception.NoAuthorizationException;
 import com.dbproject.cvapp.exception.NoUserException;
 import com.dbproject.cvapp.model.MyUser;
+import com.dbproject.cvapp.payload.response.MessageResponse;
 import com.dbproject.cvapp.service.MyUserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,6 +52,10 @@ public class AdminController {
         return myUserService.getUserByUsername(username);
     }
 
+    @GetMapping("check-token")
+    public ResponseEntity<?> checkUser() {
+        return ResponseEntity.ok(new MessageResponse("OK"));
+    }
 
 
 }

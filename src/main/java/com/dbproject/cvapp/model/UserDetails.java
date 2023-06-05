@@ -20,4 +20,5 @@ public class UserDetails {
     private MyUser myUser;
     private JobType jobType;
     private Integer noOfVacationDays;
+    private Department department;
 }

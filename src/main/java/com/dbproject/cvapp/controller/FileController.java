@@ -4,10 +4,11 @@ import com.dbproject.cvapp.exception.FileStorageException;
 import com.dbproject.cvapp.exception.MyFileNotFoundException;
 import com.dbproject.cvapp.exception.NoUserException;
 import com.dbproject.cvapp.model.DBFile;
+import com.dbproject.cvapp.model.MyUser;
+import com.dbproject.cvapp.model.Request;
 import com.dbproject.cvapp.payload.request.GenerateDocumentRequest;
 import com.dbproject.cvapp.payload.response.UploadFileResponse;
-import com.dbproject.cvapp.service.DBFileStorageService;
-import com.dbproject.cvapp.service.PDFGeneratorService;
+import com.dbproject.cvapp.service.*;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +40,10 @@ public class FileController {
     private static final Logger log = LoggerFactory.getLogger(FileController.class);
     private final DBFileStorageService dbFileStorageService;
     private final PDFGeneratorService pdfGeneratorService;
+    private final RequestService requestService;
+    private final MyUserService userService;
+    private final RequestHelper requestHelper;
+    private final HolidayService holidayService;
 
     @PostMapping("uploadFile")
     @PreAuthorize("hasRole('ADMIN') or hasRole('HR') or hasRole('EMPLOYEE')")
@@ -80,6 +85,12 @@ public class FileController {
 
     @PostMapping("/generate-file")
     public void generatePDF(HttpServletResponse response, @RequestBody GenerateDocumentRequest generateDocumentRequest) throws IOException, NoUserException {
+        generateDocumentRequest.getDetails().setNoOfDays(
+                requestHelper.countBusinessDaysBetween(
+                                generateDocumentRequest.getDetails().getStartDate(),
+                                generateDocumentRequest.getDetails().getEndDate(),
+                                holidayService.getAllHolidaysAsLocalDate())
+                        .size());
         response.setContentType("application/pdf");
         DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
         String currentDateTime = dateFormatter.format(new Date());
@@ -89,5 +100,9 @@ public class FileController {
         response.setHeader(headerKey, headerValue);
         System.out.println("New file generating...");
         this.pdfGeneratorService.export(response, generateDocumentRequest);
+        MyUser user = userService.getUserById(generateDocumentRequest.getUserId());
+        Request request = new Request(generateDocumentRequest, user);
+        requestService.saveRequest(request);
+
     }
 }
