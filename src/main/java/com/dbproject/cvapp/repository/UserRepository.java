@@ -13,6 +13,8 @@ public interface UserRepository extends JpaRepository<MyUser, Integer> {
 
     Optional<MyUser> findUserByEmail(String email);
 
+    MyUser findByUserID(Integer userID);
+
     Boolean existsByUsername(String username);
 
     Boolean existsByEmail(String email);
@@ -20,6 +22,6 @@ public interface UserRepository extends JpaRepository<MyUser, Integer> {
     @Modifying
     @Transactional
     @Query("DELETE from MyUser u WHERE u.username = :username")
-    void deleteByUsername(String username);
+    void deleteMyUserByUsername(String username);
 
 }

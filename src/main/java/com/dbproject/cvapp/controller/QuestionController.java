@@ -1,10 +1,8 @@
 package com.dbproject.cvapp.controller;
 
 import com.dbproject.cvapp.model.Question;
-import com.dbproject.cvapp.payload.response.MessageResponse;
 import com.dbproject.cvapp.service.QuestionService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,9 +22,8 @@ public class QuestionController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("add")
-    public ResponseEntity<?> createQuestion(@RequestBody Question question) {
-        Question createdQuestion = questionService.createQuestion(question);
-        return ResponseEntity.ok(new MessageResponse("Question created succesfully: " + createdQuestion));
+    public Question createQuestion(@RequestBody Question question) {
+        return questionService.createQuestion(question);
     }
 
     @PreAuthorize("hasRole('ADMIN')")

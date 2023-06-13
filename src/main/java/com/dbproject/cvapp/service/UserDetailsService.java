@@ -18,6 +18,7 @@ public class UserDetailsService {
         UserDetails userDetails = new UserDetails();
         userDetails.setMyUser(myUserService.getUserById(userDetailsDTO.getUserId()));
         userDetails.setJobType(userDetailsDTO.getJobType());
+        userDetails.setNoOfVacationDays(24);
         return userDetailsRepository.save(userDetails);
     }
 }

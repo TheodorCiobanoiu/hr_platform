@@ -49,7 +49,7 @@ public class MyUserService {
             throw new AdminDeleteException();
 
 
-        userRepository.deleteByUsername(username);
+        userRepository.deleteMyUserByUsername(username);
         return "The user with username: " + optionalUser.get().getUsername() + "has been deleted";
 
     }

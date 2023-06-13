@@ -1,5 +1,6 @@
 package com.dbproject.cvapp.dto;
 
+import com.dbproject.cvapp.model.Department;
 import com.dbproject.cvapp.model.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,6 +19,8 @@ public class RecommendationDTO {
     private String candidateEmail;
     private String candidatePhoneNumber;
     private Status progressStatus;
+    private Department department;
+    private String jobTitle;
     private Integer cvFileId;
     private List<AnswerDTO> answerDTOS;
 }

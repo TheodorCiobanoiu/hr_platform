@@ -5,6 +5,7 @@ import com.dbproject.cvapp.dto.RequestDTO;
 import com.dbproject.cvapp.exception.NoRequestException;
 import com.dbproject.cvapp.model.Request;
 import com.dbproject.cvapp.service.RequestService;
+import com.dbproject.cvapp.service.VacationDayService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -18,9 +19,11 @@ import java.util.List;
 public class RequestController {
 
     private final RequestService requestService;
+    private final VacationDayService vacationDayService;
 
     @PostMapping("add")
     public Request saveRequestFromDto(@RequestBody RequestDTO request) throws NoRequestException {
+        vacationDayService.addVacationDays(request);
         return requestService.saveRequestFromDto(request);
     }
 

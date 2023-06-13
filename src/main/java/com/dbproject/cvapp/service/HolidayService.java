@@ -21,4 +21,13 @@ public class HolidayService {
         holidaysList.forEach(holiday -> holidays.add(holiday.getDate()));
         return holidays;
     }
+
+    public Integer countAllHolidaysInMonth(Integer month) {
+        List<LocalDate> holidays = getAllHolidaysAsLocalDate();
+        return ((int) holidays.stream().filter(holiday -> holiday.getMonth().getValue() == month).count());
+    }
+
+    public Holiday addHoliday(Holiday holiday) {
+        return holidayRepository.save(holiday);
+    }
 }

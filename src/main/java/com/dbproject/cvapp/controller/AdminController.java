@@ -4,15 +4,21 @@ package com.dbproject.cvapp.controller;
 import com.dbproject.cvapp.dto.UserDTO;
 import com.dbproject.cvapp.exception.AdminDeleteException;
 import com.dbproject.cvapp.exception.NoAuthorizationException;
+import com.dbproject.cvapp.exception.NoRequestException;
 import com.dbproject.cvapp.exception.NoUserException;
+import com.dbproject.cvapp.model.Holiday;
 import com.dbproject.cvapp.model.MyUser;
+import com.dbproject.cvapp.model.OverviewMessage;
 import com.dbproject.cvapp.payload.response.MessageResponse;
+import com.dbproject.cvapp.service.HolidayService;
 import com.dbproject.cvapp.service.MyUserService;
+import com.dbproject.cvapp.service.OverviewMessagesService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -22,9 +28,12 @@ import java.util.List;
 public class AdminController {
 
     private final MyUserService myUserService;
+    private final HolidayService holidayService;
+    private final OverviewMessagesService overviewMessagesService;
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("all-users")
+
     public List<MyUser> getAllUsers() {
         return myUserService.getAllUsers();
     }
@@ -57,5 +66,21 @@ public class AdminController {
         return ResponseEntity.ok(new MessageResponse("OK"));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("add-holiday")
+    public Holiday addHoliday(@RequestBody Holiday holiday) {
+        return holidayService.addHoliday(holiday);
+    }
+
+
+    @GetMapping("get-all-holidays")
+    public List<LocalDate> getHolidays() {
+        return holidayService.getAllHolidaysAsLocalDate();
+    }
+
+    @GetMapping("get-overview-message/{userID}")
+    public OverviewMessage getOverviewMessage(@PathVariable Integer userID) throws NoRequestException {
+        return overviewMessagesService.generateOverviewMessage(userID);
+    }
 
 }
