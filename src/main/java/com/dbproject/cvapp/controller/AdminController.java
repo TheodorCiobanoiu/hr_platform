@@ -61,11 +61,6 @@ public class AdminController {
         return myUserService.getUserByUsername(username);
     }
 
-    @GetMapping("check-token")
-    public ResponseEntity<?> checkUser() {
-        return ResponseEntity.ok(new MessageResponse("OK"));
-    }
-
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("add-holiday")
     public Holiday addHoliday(@RequestBody Holiday holiday) {
@@ -83,4 +78,8 @@ public class AdminController {
         return overviewMessagesService.generateOverviewMessage(userID);
     }
 
+    @GetMapping("check-token")
+    public ResponseEntity<?> checkUser() {
+        return ResponseEntity.ok(new MessageResponse("OK"));
+    }
 }

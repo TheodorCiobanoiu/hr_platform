@@ -64,7 +64,6 @@ public class UserController {
 
     }
 
-    //@PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody SignupRequest signUpRequest) throws NoUserException {
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {

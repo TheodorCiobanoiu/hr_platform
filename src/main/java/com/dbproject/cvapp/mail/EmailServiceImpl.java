@@ -16,10 +16,11 @@ import java.util.Objects;
 
 @Service("EmailService")
 public class EmailServiceImpl implements EmailService {
-//    private static final String NOREPLY_ADDRESS = "cvtemplateapp@gmail.com";
 
-    @Value("${spring.mail.username}") private String sender;
-    @Autowired private JavaMailSender emailSender;
+    @Value("${spring.mail.username}")
+    private String sender;
+    @Autowired
+    private JavaMailSender emailSender;
 
     private SimpleMailMessage template;
 
